@@ -30,7 +30,7 @@ export class KeysService {
         const keys = await this.keyRepository.findAll({where: {userIp}})
         const timestamp = Date.now()
         for (let key of keys) {
-            const expired = (timestamp - key.createdAt) > key.expiresIn
+            const expired = (timestamp - key.timestamp) > key.expiresIn
             if(!expired) {
                 return key
             }
@@ -44,10 +44,9 @@ export class KeysService {
         if(!key) {
             throw new HttpException("Key doesn't exists.", HttpStatus.BAD_REQUEST)
         }
-        const expired = (timestamp - key.createdAt) > key.expiresIn
+        const expired = (timestamp - key.timestamp) > key.expiresIn
         console.log(key.createdAt)
         if(expired) {
-            await this.keyRepository.destroy({where: {uuid}})
             throw new HttpException("Expired key.", HttpStatus.FORBIDDEN)
         }
         return true
