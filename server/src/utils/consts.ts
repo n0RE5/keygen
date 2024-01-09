@@ -1,0 +1,1 @@
+export const KEY_EXPIRES_IN = 86400;
